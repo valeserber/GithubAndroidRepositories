@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/small_padding">
+
+        <TextView
+                android:id="@+id/name_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/barrier"
+                android:fontFamily="@font/roboto"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                tools:text="Repository name long long long long long long"/>
+
+        <TextView
+                android:id="@+id/url_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/small_padding"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintTop_toBottomOf="@id/name_text"
+                app:layout_constraintStart_toStartOf="@+id/name_text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:fontFamily="@font/roboto"
+                android:textStyle="italic"
+                tools:text="Url text"/>
+
+        <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:layout_editor_absoluteY="@dimen/small_padding"
+                tools:layout_editor_absoluteX="@dimen/small_padding"
+                app:barrierDirection="start"
+                app:constraint_referenced_ids="star_image"/>
+
+        <ImageView
+                android:id="@+id/star_image"
+                android:layout_width="@dimen/small_icon_size"
+                android:layout_height="@dimen/small_icon_size"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintEnd_toStartOf="@+id/star_text"
+                app:layout_constraintHorizontal_bias="0.95"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/stars"/>
+
+        <TextView
+                android:id="@+id/star_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBaseline_toBaselineOf="@+id/name_text"
+                android:fontFamily="@font/roboto"
+                android:textSize="@dimen/medium_text"
+                tools:text="12345"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

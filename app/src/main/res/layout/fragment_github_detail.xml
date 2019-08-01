@@ -1,17 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.GithubDetailFragment">
-    <FrameLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:padding="6dp">
 
         <TextView
-                android:id="@+id/detail_text"
+                android:id="@+id/detail_name_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Detail"/>
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:textSize="@dimen/big_text"
+                android:textStyle="bold"
+                tools:text="Repository name"/>
 
-    </FrameLayout>
+        <TextView
+                android:id="@+id/detail_url_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintTop_toBottomOf="@+id/detail_name_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:textStyle="italic"
+                android:textSize="@dimen/small_text"
+                tools:text="Url text"/>
+
+        <TextView
+                android:id="@+id/detail_description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:layout_constraintTop_toBottomOf="@+id/detail_url_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:textSize="@dimen/medium_text"
+                tools:text="Repository description"/>
+
+        <ImageView
+                android:id="@+id/detail_star_image"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:layout_constraintTop_toBottomOf="@+id/detail_description_text"
+                app:layout_constraintStart_toStartOf="parent"
+                android:contentDescription="@string/star_count"
+                app:srcCompat="@drawable/stars"/>
+
+        <TextView
+                android:id="@+id/detail_stars_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_star_image"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_star_image"
+                app:layout_constraintStart_toEndOf="@+id/detail_star_image"
+                android:textSize="@dimen/medium_text"
+                tools:text="23456"/>
+
+        <ImageView
+                android:id="@+id/detail_fork_image"
+                android:layout_width="@dimen/icon_size"
+                android:layout_height="@dimen/icon_size"
+                android:layout_marginEnd="@dimen/medium_margin"
+                app:layout_constraintEnd_toStartOf="@+id/detail_forks_text"
+                app:layout_constraintTop_toTopOf="@+id/detail_forks_text"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_forks_text"
+                android:contentDescription="@string/fork_count"
+                app:srcCompat="@drawable/forks"/>
+
+        <TextView
+                android:id="@+id/detail_forks_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/detail_star_image"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_star_image"
+                android:textSize="@dimen/medium_text"
+                tools:text="78901"/>
+
+        <TextView
+                android:id="@+id/detail_owner_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/detail_owner_image"
+                app:layout_constraintTop_toTopOf="@+id/detail_owner_image"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_owner_image"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:textSize="@dimen/medium_text"
+                android:text="@string/owner_name"/>
+
+        <ImageView
+                android:id="@+id/detail_owner_image"
+                android:layout_width="@dimen/avatar_size"
+                android:layout_height="@dimen/avatar_size"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginTop="@dimen/big_margin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/detail_star_image"
+                android:contentDescription="@string/owner_image"
+                tools:srcCompat="@tools:sample/avatars"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>
