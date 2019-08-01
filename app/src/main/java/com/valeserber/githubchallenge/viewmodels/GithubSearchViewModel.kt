@@ -15,13 +15,12 @@ class GithubSearchViewModel(application: Application) : AndroidViewModel(applica
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
     private val githubSearchRepository = GithubSearchRepository()
 
+
     init {
         viewModelScope.launch {
-            try {
-                githubSearchRepository.refreshSearch()
-            } catch (exception : Exception) {
-                Log.i("GithubSearchRepos", "error")
-            }
+            val githubSearchResult = githubSearchRepository.refreshSearch()
+
+            Log.i("GithubSearchRepository", githubSearchResult.repositories.size.toString())
         }
     }
 }

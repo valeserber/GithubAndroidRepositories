@@ -1,26 +1,32 @@
 package com.valeserber.githubchallenge.repository
 
 import android.util.Log
+import com.valeserber.githubchallenge.domain.GithubSearchResult
 import com.valeserber.githubchallenge.network.GithubNetwork
+import com.valeserber.githubchallenge.network.asDomainModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 class GithubSearchRepository {
 
 
-    suspend fun refreshSearch() {
+    suspend fun refreshSearch() : GithubSearchResult {
 
         //This scope is necessary to update the database when the search is refreshed
-        withContext(Dispatchers.IO) {
+        return withContext(Dispatchers.IO) {
 
-            val repositoriesList = GithubNetwork.retrofitService
+            val searchResponse = GithubNetwork.retrofitService
                 .searchRepositories("android", "stars", "desc", 1, 5)
                 .await()
-                .items
+
+            val repositoriesList = searchResponse.items
 
             Log.i("GithubSearchRepos", repositoriesList.size.toString())
             //TODO insert repositories in database as Database Model
-        }
 
+            //TODO manage network errors
+
+            return@withContext GithubSearchResult(searchResponse.asDomainModel(), emptyList())
+        }
     }
 }
