@@ -1,6 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            android:id="@+id/navigation_graph.xml">
+            xmlns:tools="http://schemas.android.com/tools" android:id="@+id/navigation_graph.xml"
+            app:startDestination="@id/githubSearchFragment">
 
+    <fragment android:id="@+id/githubSearchFragment"
+              android:name="com.valeserber.githubchallenge.ui.GithubSearchFragment"
+              android:label="fragment_github_search" tools:layout="@layout/fragment_github_search">
+        <action android:id="@+id/actionToDetailFragment"
+                app:destination="@id/githubDetailFragment"/>
+    </fragment>
+    <fragment android:id="@+id/githubDetailFragment"
+              android:name="com.valeserber.githubchallenge.ui.GithubDetailFragment"
+              android:label="fragment_github_detail" tools:layout="@layout/fragment_github_detail"/>
 </navigation>
