@@ -3,6 +3,7 @@ package com.valeserber.githubchallenge.viewmodels
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.AndroidViewModel
+import com.valeserber.githubchallenge.domain.GithubSearchResult
 import com.valeserber.githubchallenge.repository.GithubSearchRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -18,7 +19,11 @@ class GithubSearchViewModel(application: Application) : AndroidViewModel(applica
 
     init {
         viewModelScope.launch {
-            val githubSearchResult = githubSearchRepository.refreshSearch()
+            var githubSearchResult = GithubSearchResult()
+
+            githubSearchResult = githubSearchRepository.refreshSearch()
+
+            //TODO Fragment has to observe githubSearchResult.networkStatus and gihubSearchResult.repositoriesList
 
             Log.i("GithubSearchRepository", githubSearchResult.repositories.size.toString())
         }
