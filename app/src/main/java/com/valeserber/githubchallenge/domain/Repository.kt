@@ -1,6 +1,7 @@
 package com.valeserber.githubchallenge.domain
 
 data class Repository(
+    val id : Long,
     val name: String,
     val description: String?,
     val url: String,
