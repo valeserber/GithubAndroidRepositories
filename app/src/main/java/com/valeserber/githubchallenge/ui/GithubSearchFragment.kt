@@ -16,9 +16,12 @@ import com.valeserber.githubchallenge.viewmodels.GithubSearchViewModel
 class GithubSearchFragment : Fragment() {
 
 
-    private val viewModel: GithubSearchViewModel by lazy {
-        ViewModelProviders.of(this).get(GithubSearchViewModel::class.java)
-    }
+//    private val viewModel: GithubSearchViewModel by lazy {
+//        ViewModelProviders.of(this).get(GithubSearchViewModel::class.java)
+//    }
+
+    private lateinit var viewModel : GithubSearchViewModel
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val binding : FragmentGithubSearchBinding = DataBindingUtil.inflate(
@@ -26,6 +29,12 @@ class GithubSearchFragment : Fragment() {
             R.layout.fragment_github_search,
             container,
             false)
+
+        viewModel =
+            ViewModelProviders.of(this).get(GithubSearchViewModel::class.java)
+
+
+        val a = viewModel.toString()
 
         return binding.root
     }
