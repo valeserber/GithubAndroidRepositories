@@ -1,11 +1,15 @@
 package com.valeserber.githubchallenge.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import com.valeserber.githubchallenge.database.DBOwner
 import com.valeserber.githubchallenge.database.DBRepository
 import com.valeserber.githubchallenge.database.GithubDatabase
+import com.valeserber.githubchallenge.database.asDomainModel
 import com.valeserber.githubchallenge.domain.GithubSearchResult
 import com.valeserber.githubchallenge.domain.NetworkStatus
+import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.network.GithubNetwork
 import com.valeserber.githubchallenge.network.asDatabaseModel
 import com.valeserber.githubchallenge.network.asDomainModel
@@ -14,6 +18,12 @@ import kotlinx.coroutines.withContext
 
 
 class GithubSearchRepository(private val database: GithubDatabase) {
+
+    val repositoriesList: LiveData<List<Repository>> =
+        Transformations.map(database.githubRepositoriesDao.getRepositories()) {
+            it.asDomainModel()
+        }
+
 
     suspend fun getOwnerById(id: Long): DBOwner {
         return withContext(Dispatchers.IO) {
@@ -27,9 +37,24 @@ class GithubSearchRepository(private val database: GithubDatabase) {
         }
     }
 
-    suspend fun getRepositories(): List<DBRepository> {
+    fun getRepositoriesBlocking(): LiveData<List<Repository>> {
+        return Transformations.map(database.githubRepositoriesDao.getRepositories()) { dbRepoList ->
+            dbRepoList.asDomainModel()
+        }
+    }
+
+    suspend fun getRepositories(): LiveData<List<Repository>> {
         return withContext(Dispatchers.IO) {
-            return@withContext database.githubRepositoriesDao.getRepositories()
+
+            val repoList = database.githubRepositoriesDao.getRepositories()
+
+            if (repoList.value == null) {
+
+            }
+
+            return@withContext Transformations.map(repoList) { dbRepoList ->
+                dbRepoList.asDomainModel()
+            }
         }
     }
 

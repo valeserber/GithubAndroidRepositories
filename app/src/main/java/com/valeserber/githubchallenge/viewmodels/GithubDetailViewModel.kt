@@ -6,3 +6,4 @@ import androidx.lifecycle.AndroidViewModel
 class GithubDetailViewModel(application: Application) : AndroidViewModel(application) {
 
 }
+

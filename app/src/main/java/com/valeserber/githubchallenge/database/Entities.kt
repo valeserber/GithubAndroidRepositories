@@ -1,9 +1,13 @@
 package com.valeserber.githubchallenge.database
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
 import androidx.room.PrimaryKey
+import com.valeserber.githubchallenge.domain.Owner
+import com.valeserber.githubchallenge.domain.Repository
 
 //Foreign Key with onDelete = CASCADE means that whenever an Owner is deleted,
 //then all of its repositories will be deleted
@@ -34,3 +38,13 @@ data class DBOwner(
     val name: String,
     val avatarUrl: String
 )
+
+fun DBRepository.asDomainModel(): Repository {
+    return Repository(id, name, description, url, starsCount, forksCount, watchersCount, language, Owner(ownerId))
+}
+
+fun List<DBRepository>.asDomainModel(): List<Repository> {
+    return this.map { dbRepository ->
+        dbRepository.asDomainModel()
+    }
+}

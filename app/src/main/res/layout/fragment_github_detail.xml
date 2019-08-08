@@ -3,6 +3,12 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         tools:context=".ui.GithubDetailFragment">
+
+    <data>
+        <variable
+                name="viewModel"
+                type="com.valeserber.githubchallenge.viewmodels.GithubDetailViewModel"/>
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,7 +27,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/big_text"
                 android:textStyle="bold"
-                tools:text="Repository name"/>
+                tools:text="Repository name"
+                android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_url_text"
@@ -36,7 +43,8 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textStyle="italic"
                 android:textSize="@dimen/small_text"
-                tools:text="Url text"/>
+                tools:text="Url text"
+                android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_description_text"
@@ -50,51 +58,85 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/medium_text"
-                tools:text="Repository description"/>
+                tools:text="Repository description"
+                android:fontFamily="@font/roboto"/>
 
-        <ImageView
-                android:id="@+id/detail_star_image"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
+        <TextView
+                android:id="@+id/detail_star_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintTop_toBottomOf="@+id/detail_description_text"
                 app:layout_constraintStart_toStartOf="parent"
-                android:contentDescription="@string/star_count"
-                app:srcCompat="@drawable/stars"/>
+                android:textSize="@dimen/medium_text"
+                android:text="@string/star_count"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_stars_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                app:layout_constraintTop_toTopOf="@+id/detail_star_image"
-                app:layout_constraintBottom_toBottomOf="@+id/detail_star_image"
-                app:layout_constraintStart_toEndOf="@+id/detail_star_image"
+                android:layout_marginStart="@dimen/small_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_star_description"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_star_description"
+                app:layout_constraintStart_toEndOf="@+id/detail_star_description"
                 android:textSize="@dimen/medium_text"
-                tools:text="23456"/>
+                tools:text="23456"
+                android:fontFamily="@font/roboto"/>
 
-        <ImageView
-                android:id="@+id/detail_fork_image"
-                android:layout_width="@dimen/icon_size"
-                android:layout_height="@dimen/icon_size"
-                android:layout_marginEnd="@dimen/medium_margin"
-                app:layout_constraintEnd_toStartOf="@+id/detail_forks_text"
-                app:layout_constraintTop_toTopOf="@+id/detail_forks_text"
-                app:layout_constraintBottom_toBottomOf="@+id/detail_forks_text"
-                android:contentDescription="@string/fork_count"
-                app:srcCompat="@drawable/forks"/>
+        <TextView
+                android:id="@+id/detail_fork_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_stars_text"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_stars_text"
+                app:layout_constraintStart_toEndOf="@+id/detail_stars_text"
+                android:textSize="@dimen/medium_text"
+                android:text="@string/fork_count"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_forks_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/detail_star_image"
-                app:layout_constraintBottom_toBottomOf="@+id/detail_star_image"
+                android:layout_marginStart="@dimen/small_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_fork_description"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_fork_description"
+                app:layout_constraintStart_toEndOf="@+id/detail_fork_description"
                 android:textSize="@dimen/medium_text"
-                tools:text="78901"/>
+                tools:text="78901"
+                android:fontFamily="@font/roboto"/>
+
+        <TextView
+                android:id="@+id/detail_watchers_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_forks_text"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_forks_text"
+                app:layout_constraintStart_toEndOf="@+id/detail_forks_text"
+                android:textSize="@dimen/medium_text"
+                android:text="@string/watchers_count"
+                android:textStyle="bold"
+                android:fontFamily="@font/roboto"/>
+
+        <TextView
+                android:id="@+id/detail_watchers_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
+                app:layout_constraintTop_toTopOf="@+id/detail_watchers_description"
+                app:layout_constraintBottom_toBottomOf="@+id/detail_watchers_description"
+                app:layout_constraintStart_toEndOf="@+id/detail_watchers_description"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:textSize="@dimen/medium_text"
+                tools:text="78901"
+                android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_owner_text"
@@ -108,7 +150,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/detail_owner_image"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/medium_text"
-                android:text="@string/owner_name"/>
+                android:text="@string/owner_name"
+                android:fontFamily="@font/roboto"/>
 
         <ImageView
                 android:id="@+id/detail_owner_image"
@@ -117,7 +160,7 @@
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginTop="@dimen/big_margin"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/detail_star_image"
+                app:layout_constraintTop_toBottomOf="@+id/detail_star_description"
                 android:contentDescription="@string/owner_image"
                 tools:srcCompat="@tools:sample/avatars"/>
 
