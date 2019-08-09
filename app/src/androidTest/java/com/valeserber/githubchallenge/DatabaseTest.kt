@@ -6,12 +6,13 @@ import androidx.room.Room
 import org.junit.runner.RunWith
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
+import com.google.common.truth.Truth.assertThat
 import com.valeserber.githubchallenge.database.GithubDatabase
 import com.valeserber.githubchallenge.database.GithubRepositoriesDao
-import org.hamcrest.core.IsEqual.equalTo
-import org.junit.*
-import org.junit.Assert.assertThat
-import org.junit.Assert.assertTrue
+import org.junit.After
+import org.junit.Before
+import org.junit.Rule
+import org.junit.Test
 import java.io.IOException
 
 
@@ -45,7 +46,7 @@ open class GithubRepositoriesDaoTest {
         val owner = TestUtils.getTestOwner1()
         repositoriesDao.insertAll(owner)
         val savedOwner = repositoriesDao.getUserById(owner.id)
-        assertThat(owner, equalTo(savedOwner))
+        assertThat(owner).isEqualTo(savedOwner)
     }
 
     @Test
@@ -56,8 +57,8 @@ open class GithubRepositoriesDaoTest {
         repositoriesDao.insertAll(owner)
         repositoriesDao.insertAll(repo)
         val repositoriesList = repositoriesDao.getRepositories()
-        assertTrue(repositoriesList.size == 1)
-        assertThat(repositoriesList[0], equalTo(repo))
+        assertThat(repositoriesList.value).hasSize(1)
+        assertThat(repositoriesList.value!![0]).isEqualTo(repo)
     }
 
     @Test
@@ -67,8 +68,8 @@ open class GithubRepositoriesDaoTest {
         repositoriesDao.insertAll(TestUtils.getTestRepository1(), TestUtils.getTestRepository2())
         val repositoriesList = repositoriesDao.getRepositories()
         val ownersList = repositoriesDao.getOwners()
-        assertTrue(repositoriesList.size == 2)
-        assertTrue(ownersList.size == 2)
+        assertThat(repositoriesList.value).hasSize(2)
+        assertThat(ownersList).hasSize(2)
     }
 
     @Test(expected = SQLiteConstraintException::class)
@@ -76,8 +77,8 @@ open class GithubRepositoriesDaoTest {
     fun testRepositoryForeignKeyOnOwner() {
         val repositoriesList = repositoriesDao.getRepositories()
         val ownersList = repositoriesDao.getOwners()
-        assertTrue(repositoriesList.isEmpty())
-        assertTrue(ownersList.isEmpty())
+        assertThat(repositoriesList.value).isEmpty()
+        assertThat(ownersList).isEmpty()
         val repo = TestUtils.getTestRepository1()
         repositoriesDao.insertAll(repo)
     }
@@ -90,15 +91,15 @@ open class GithubRepositoriesDaoTest {
         repositoriesDao.insertAll(TestUtils.getTestRepository2(), TestUtils.getTestRepository3())
         val repositoriesList = repositoriesDao.getRepositories()
         val ownersList = repositoriesDao.getOwners()
-        assertTrue(repositoriesList.size == 2)
-        assertTrue(ownersList.size == 1)
+        assertThat(repositoriesList.value).hasSize(2)
+        assertThat(ownersList).hasSize(1)
 
         repositoriesDao.deleteOwners()
 
         val finalRepositoriesList = repositoriesDao.getRepositories()
         val finalOwnersList = repositoriesDao.getOwners()
-        assertTrue(finalRepositoriesList.isEmpty())
-        assertTrue(finalOwnersList.isEmpty())
+        assertThat(finalRepositoriesList.value).isEmpty()
+        assertThat(finalOwnersList).isEmpty()
     }
 }
 

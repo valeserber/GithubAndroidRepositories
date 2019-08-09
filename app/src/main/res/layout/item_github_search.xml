@@ -2,10 +2,20 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools">
+    
+    <data>
+        <variable
+                name="repository"
+                type="com.valeserber.githubchallenge.domain.Repository"/>
+        <variable
+                name="clickListener"
+                type="com.valeserber.githubchallenge.ui.SearchRepositoryListener"/>
+    </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:onClick="@{ () -> clickListener.onClick(repository) }"
             android:padding="@dimen/small_padding">
 
         <TextView
@@ -25,17 +35,18 @@
 
         <TextView
                 android:id="@+id/url_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_padding"
                 android:layout_marginEnd="@dimen/small_margin"
                 app:layout_constraintTop_toBottomOf="@id/name_text"
                 app:layout_constraintStart_toStartOf="@+id/name_text"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintEnd_toEndOf="@+id/name_text"
                 android:fontFamily="@font/roboto"
                 android:textStyle="italic"
-                tools:text="Url text"/>
+                tools:text="Url text"
+                android:textAlignment="viewStart"
+                app:layout_constraintHorizontal_bias="0.0"/>
 
         <androidx.constraintlayout.widget.Barrier
                 android:id="@+id/barrier"
@@ -44,30 +55,35 @@
                 tools:layout_editor_absoluteY="@dimen/small_padding"
                 tools:layout_editor_absoluteX="@dimen/small_padding"
                 app:barrierDirection="start"
-                app:constraint_referenced_ids="star_image"/>
-
-        <ImageView
-                android:id="@+id/star_image"
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginEnd="@dimen/small_margin"
-                app:layout_constraintEnd_toStartOf="@+id/star_text"
-                app:layout_constraintHorizontal_bias="0.95"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/stars"/>
+                app:constraint_referenced_ids="criteria_text, criteria_value_text"/>
 
         <TextView
-                android:id="@+id/star_text"
+                android:id="@+id/criteria_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintBaseline_toBaselineOf="@+id/name_text"
+                app:layout_constraintStart_toEndOf="@+id/barrier"
+                android:textSize="@dimen/medium_text"
+                android:textAlignment="center"
+                android:fontFamily="@font/roboto"
+                tools:text="Stars"
+                app:layout_constraintBaseline_toBaselineOf="@+id/name_text"/>
+
+        <TextView
+                android:id="@+id/criteria_value_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginStart="@dimen/small_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/criteria_text"
+                app:layout_constraintStart_toEndOf="@+id/barrier"
+                android:textAlignment="center"
                 android:fontFamily="@font/roboto"
                 android:textSize="@dimen/medium_text"
-                tools:text="12345"/>
+                tools:text="3434342"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

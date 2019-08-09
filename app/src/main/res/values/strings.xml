@@ -2,6 +2,7 @@
     <string name="app_name">GithubChallenge</string>
     <string name="star_count">Stars</string>
     <string name="fork_count">Forks</string>
+    <string name="watchers_count">Watchers</string>
     <string name="owner_image">Owner avatar</string>
     <string name="owner_name">Owner</string>
 </resources>

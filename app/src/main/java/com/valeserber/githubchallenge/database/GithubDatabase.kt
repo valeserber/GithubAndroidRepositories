@@ -1,35 +1,40 @@
 package com.valeserber.githubchallenge.database
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.room.*
 
 @Database(entities = [DBRepository::class, DBOwner::class], version = 1)
 abstract class GithubDatabase : RoomDatabase() {
 
     abstract val githubRepositoriesDao: GithubRepositoriesDao
-}
 
-private lateinit var INSTANCE: GithubDatabase
+    companion object {
+        @Volatile
+        private lateinit var INSTANCE: GithubDatabase
 
-fun getDatabase(context: Context): GithubDatabase {
+        fun getDatabase(context: Context): GithubDatabase {
 
-    synchronized(GithubDatabase::class.java) {
-        if (!::INSTANCE.isInitialized) {
-            INSTANCE = Room.databaseBuilder(
-                context.applicationContext,
-                GithubDatabase::class.java,
-                "githubRepositories"
-            ).build()
+            synchronized(GithubDatabase::class.java) {
+                if (!::INSTANCE.isInitialized) {
+                    INSTANCE = Room.databaseBuilder(
+                        context.applicationContext,
+                        GithubDatabase::class.java,
+                        "githubRepositories"
+                    ).build()
+                }
+            }
+            return INSTANCE
         }
     }
-    return INSTANCE
 }
+
 
 @Dao
 interface GithubRepositoriesDao {
 
     @Query("SELECT * FROM repositories")
-    fun getRepositories(): List<DBRepository>
+    fun getRepositories(): LiveData<List<DBRepository>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg repositories: DBRepository)
