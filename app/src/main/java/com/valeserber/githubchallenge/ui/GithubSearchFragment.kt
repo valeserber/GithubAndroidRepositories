@@ -4,24 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.RecyclerView
 import com.valeserber.githubchallenge.R
 import com.valeserber.githubchallenge.databinding.FragmentGithubSearchBinding
-import com.valeserber.githubchallenge.domain.Repository
+import com.valeserber.githubchallenge.util.Injection
 import com.valeserber.githubchallenge.viewmodels.GithubSearchViewModel
 
 class GithubSearchFragment : Fragment() {
-
-
-//    private val viewModel: GithubSearchViewModel by lazy {
-//        ViewModelProviders.of(this).get(GithubSearchViewModel::class.java)
-//    }
 
     private lateinit var viewModel: GithubSearchViewModel
 
@@ -35,8 +28,10 @@ class GithubSearchFragment : Fragment() {
             false
         )
 
-        viewModel =
-            ViewModelProviders.of(this).get(GithubSearchViewModel::class.java)
+        //TODO check requireContext
+        viewModel = ViewModelProviders.of(this, Injection.provideGithubSearchViewModelFactory(this.requireContext()))
+            .get(GithubSearchViewModel::class.java)
+
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
