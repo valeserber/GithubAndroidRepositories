@@ -10,6 +10,7 @@ import com.valeserber.githubchallenge.database.asDomainModel
 import com.valeserber.githubchallenge.domain.GithubSearchResult
 import com.valeserber.githubchallenge.domain.NetworkStatus
 import com.valeserber.githubchallenge.domain.Repository
+import com.valeserber.githubchallenge.network.GithubApiService
 import com.valeserber.githubchallenge.network.GithubNetwork
 import com.valeserber.githubchallenge.network.asDatabaseModel
 import com.valeserber.githubchallenge.network.asDomainModel
@@ -17,7 +18,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 
-class GithubSearchRepository(private val database: GithubDatabase) {
+class GithubSearchRepository(private val database: GithubDatabase, private val apiService: GithubApiService) {
 
     val repositoriesList: LiveData<List<Repository>> =
         Transformations.map(database.githubRepositoriesDao.getRepositories()) {
@@ -74,7 +75,7 @@ class GithubSearchRepository(private val database: GithubDatabase) {
 
                 val page = 1
 
-                val searchResponse = GithubNetwork.retrofitService
+                val searchResponse = apiService
                     .searchRepositoriesAsync("android", "stars", "desc", page, 5)
                     .await()
 
