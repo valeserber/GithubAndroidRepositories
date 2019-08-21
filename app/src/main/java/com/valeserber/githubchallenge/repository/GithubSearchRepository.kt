@@ -1,12 +1,12 @@
 package com.valeserber.githubchallenge.repository
 
+import android.util.Log
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import com.valeserber.githubchallenge.database.DBOwner
 import com.valeserber.githubchallenge.database.GithubDatabase
 import com.valeserber.githubchallenge.database.asDomainModel
 import com.valeserber.githubchallenge.domain.GithubSearchResult
-import com.valeserber.githubchallenge.domain.NetworkStatus
 import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.network.GithubApiService
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +16,8 @@ import kotlinx.coroutines.withContext
 
 class GithubSearchRepository(
     private val database: GithubDatabase,
-    private val apiService: GithubApiService) {
+    private val apiService: GithubApiService
+) {
 
 
     suspend fun getOwnerById(id: Long): DBOwner {
@@ -40,26 +41,20 @@ class GithubSearchRepository(
 
     fun search(query: String, criteria: String, scope: CoroutineScope): GithubSearchResult {
 
-        try {
-            val dataSourceFactory = database.githubRepositoriesDao.getRepositories(criteria)
+        val dataSourceFactory = database.githubRepositoriesDao.getRepositories(criteria)
 
-            val boundaryCallback = GithubSearchBoundaryCallback(query, database, apiService, scope)
+        val boundaryCallback = GithubSearchBoundaryCallback(query, database, apiService, scope)
 
-            //val networkErrors = boundaryCallback.networkErrors
-
-
-            val modelDataSource: DataSource.Factory<Int, Repository> = dataSourceFactory.map {
-                it.asDomainModel()
-            }
-
-            val data = LivePagedListBuilder(modelDataSource, DATABASE_PAGE_SIZE)
-                .setBoundaryCallback(boundaryCallback)
-                .build()
-
-            return GithubSearchResult(NetworkStatus.DONE, data)
-        } catch (e: Exception) {
-            return GithubSearchResult(NetworkStatus.ERROR)
+        val modelDataSource: DataSource.Factory<Int, Repository> = dataSourceFactory.map {
+            it.asDomainModel()
         }
+
+        val data = LivePagedListBuilder(modelDataSource, DATABASE_PAGE_SIZE)
+            .setBoundaryCallback(boundaryCallback)
+            .build()
+
+        Log.i("GithubSearchRepos", "in repository " + boundaryCallback.networkStatus.value.toString())
+        return GithubSearchResult(boundaryCallback.networkStatus, data)
     }
 
 
