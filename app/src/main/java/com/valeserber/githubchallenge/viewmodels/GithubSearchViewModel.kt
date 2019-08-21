@@ -46,6 +46,11 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
         _navigateToRepositoryDetail.value = null
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
+    }
+
 }
 
 
