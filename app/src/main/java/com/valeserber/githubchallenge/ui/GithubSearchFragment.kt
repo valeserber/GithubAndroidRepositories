@@ -1,6 +1,7 @@
 package com.valeserber.githubchallenge.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import com.valeserber.githubchallenge.R
 import com.valeserber.githubchallenge.databinding.FragmentGithubSearchBinding
+import com.valeserber.githubchallenge.domain.NetworkStatus
 import com.valeserber.githubchallenge.util.Injection
 import com.valeserber.githubchallenge.viewmodels.GithubSearchViewModel
 
@@ -60,6 +62,17 @@ class GithubSearchFragment : Fragment() {
                 viewModel.onRepositoryDetailNavigated()
             }
 
+        })
+
+        viewModel.networkStatus.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                when (it) {
+                    //TODO change to UI update
+                    NetworkStatus.ERROR -> Log.i("GithubSearchRepos", "in fragment error")
+                    NetworkStatus.DONE -> Log.i("GithubSearchRepos", "in fragment done")
+                    NetworkStatus.LOADING -> Log.i("GithubSearchRepos", "in fragment loading")
+                }
+            }
         })
     }
 }

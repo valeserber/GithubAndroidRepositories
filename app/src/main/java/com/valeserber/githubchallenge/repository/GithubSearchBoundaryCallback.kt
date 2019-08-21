@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.PagedList
 import com.valeserber.githubchallenge.database.GithubDatabase
+import com.valeserber.githubchallenge.domain.NetworkStatus
 import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.network.GithubApiService
 import com.valeserber.githubchallenge.network.asDatabaseModel
@@ -12,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 
 class GithubSearchBoundaryCallback(
@@ -23,10 +25,10 @@ class GithubSearchBoundaryCallback(
 
     private var isRequestInProgress = false
     private var lastRequestedPage = 1
-    //TODO implement network errors
-    private val _networkErrors = MutableLiveData<String>()
-    val networkErrors: LiveData<String>
-        get() = _networkErrors
+
+    private val _networkStatus = MutableLiveData<NetworkStatus>()
+    val networkStatus: LiveData<NetworkStatus>
+        get() = _networkStatus
 
     override fun onZeroItemsLoaded() {
         scope.launch {
@@ -47,31 +49,47 @@ class GithubSearchBoundaryCallback(
 
         withContext(Dispatchers.IO) {
 
-            //TODO change stars to criteria
-            val searchResponse = apiService
-                .searchRepositoriesAsync(query, "stars", "desc", lastRequestedPage, NETWORK_PAGE_SIZE)
-                .await()
+            try {
+                _networkStatus.postValue(NetworkStatus.LOADING)
 
-            val repositoriesList = searchResponse.items
+                //TODO change stars to criteria
+                val searchResponse = apiService
+                    .searchRepositoriesAsync(query, "stars", "desc", lastRequestedPage, NETWORK_PAGE_SIZE)
+                    .await()
 
-            Log.i("GithubSearchRepos", repositoriesList.size.toString())
+                if (searchResponse.isSuccessful) {
+                    val body = searchResponse.body()
 
-            val pairResult = searchResponse.asDatabaseModel()
+                    body?.let {
+                        Log.i("GithubSearchRepos", "in boundary " + it.items.size.toString())
+                        val pairResult = it.asDatabaseModel()
 
-            if (lastRequestedPage == 1) {
-                //If we have new information from the api, we invalidate the cache
-                //Delete old information. This deletes all owners and all repositories
-                database.githubRepositoriesDao.deleteOwners()
+                        if (lastRequestedPage == 1) {
+                            //If we have new information from the api, we invalidate the cache
+                            //Delete old information. This deletes all owners and all repositories
+                            database.githubRepositoriesDao.deleteOwners()
+                        }
+
+                        database.githubRepositoriesDao.insertAll(*(pairResult.first)) //owners
+                        database.githubRepositoriesDao.insertAll(*(pairResult.second)) //repositories
+
+                        lastRequestedPage++
+
+                        _networkStatus.postValue(NetworkStatus.DONE)
+                    }
+                } else {
+                    Log.i(
+                        "GithubSearchRepos",
+                        "in boundary " + searchResponse.errorBody()?.string()
+                    )
+                    throw Exception(searchResponse.errorBody()?.string())
+                }
+            } catch (e: Throwable) {
+                _networkStatus.postValue(NetworkStatus.ERROR)
+            } finally {
+                isRequestInProgress = false
             }
 
-            database.githubRepositoriesDao.insertAll(*(pairResult.first)) //owners
-            database.githubRepositoriesDao.insertAll(*(pairResult.second)) //repositories
-
-            lastRequestedPage++
-            isRequestInProgress = false
-
-
-            //TODO add network error check
         }
 
     }

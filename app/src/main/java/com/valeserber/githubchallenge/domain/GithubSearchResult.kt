@@ -5,8 +5,9 @@ import androidx.paging.PagedList
 
 
 data class GithubSearchResult(
-    var networkStatus: NetworkStatus = NetworkStatus.LOADING,
+    var networkStatus: LiveData<NetworkStatus>,
     var repositories: LiveData<PagedList<Repository>>? = null
+
 )
 
 enum class NetworkStatus { LOADING, DONE, ERROR }

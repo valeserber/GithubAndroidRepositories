@@ -30,8 +30,8 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
     }
 
     val repositories: LiveData<PagedList<Repository>> = Transformations.switchMap(searchResult) { it.repositories }
-    //val networkStatus: LiveData<NetworkStatus> = repoResult.value?.networkStatus
 
+    val networkStatus: LiveData<NetworkStatus> = Transformations.switchMap(searchResult) { it.networkStatus }
 
     init {
         queryLiveData.postValue("android")
@@ -44,6 +44,11 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
 
     fun onRepositoryDetailNavigated() {
         _navigateToRepositoryDetail.value = null
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        viewModelJob.cancel()
     }
 
 }
