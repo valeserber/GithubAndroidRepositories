@@ -4,7 +4,6 @@ import com.squareup.moshi.Json
 import com.valeserber.githubchallenge.database.DBOwner
 import com.valeserber.githubchallenge.database.DBRepository
 import com.valeserber.githubchallenge.domain.Owner
-import com.valeserber.githubchallenge.domain.Repository
 
 //DAOs (Data transfer objects) are responsible for parsing responses from the server and formatting objects
 //to send to the server
@@ -37,21 +36,6 @@ data class NetworkOwner(
     val avatarUrl: String
 )
 
-fun NetworkSearchResponse.asDomainModel(): List<Repository> {
-    return items.map { repository ->
-        Repository(
-            repository.id,
-            repository.name,
-            repository.description,
-            repository.url,
-            repository.starsCount,
-            repository.forksCount,
-            repository.watchersCount,
-            repository.language,
-            repository.owner.asDomainModel()
-        )
-    }
-}
 
 fun NetworkOwner.asDomainModel(): Owner {
     return Owner(id, ownerName, avatarUrl)

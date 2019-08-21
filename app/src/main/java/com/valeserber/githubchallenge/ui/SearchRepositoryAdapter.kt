@@ -2,14 +2,14 @@ package com.valeserber.githubchallenge.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.valeserber.githubchallenge.databinding.ItemGithubSearchBinding
 import com.valeserber.githubchallenge.domain.Repository
 
 class SearchRepositoryAdapter(val clickListener: SearchRepositoryListener) :
-    ListAdapter<Repository, SearchRepositoryAdapter.ViewHolder>(SearchRepositoryDiffCallback()) {
+    PagedListAdapter<Repository, SearchRepositoryAdapter.ViewHolder>(SearchRepositoryDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder.from(parent)
@@ -17,7 +17,10 @@ class SearchRepositoryAdapter(val clickListener: SearchRepositoryListener) :
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(clickListener, item)
+        if (item != null) {
+            holder.bind(clickListener, item)
+        }
+        //when item is null we can implement a placeholder
     }
 
 

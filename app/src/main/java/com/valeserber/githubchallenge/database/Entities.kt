@@ -1,7 +1,5 @@
 package com.valeserber.githubchallenge.database
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.Transformations
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.ForeignKey.CASCADE
@@ -43,8 +41,3 @@ fun DBRepository.asDomainModel(): Repository {
     return Repository(id, name, description, url, starsCount, forksCount, watchersCount, language, Owner(ownerId))
 }
 
-fun List<DBRepository>.asDomainModel(): List<Repository> {
-    return this.map { dbRepository ->
-        dbRepository.asDomainModel()
-    }
-}
