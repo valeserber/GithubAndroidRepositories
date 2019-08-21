@@ -1,7 +1,7 @@
 package com.valeserber.githubchallenge.database
 
 import android.content.Context
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.*
 
 @Database(entities = [DBRepository::class, DBOwner::class], version = 1)
@@ -33,8 +33,16 @@ abstract class GithubDatabase : RoomDatabase() {
 @Dao
 interface GithubRepositoriesDao {
 
-    @Query("SELECT * FROM repositories")
-    fun getRepositories(): LiveData<List<DBRepository>>
+    @Query(
+        """SELECT * FROM repositories ORDER BY
+            CASE :criteria
+            WHEN 'stars' THEN starsCount
+            WHEN 'forks' THEN forksCount
+            WHEN 'watchers' THEN watchersCount
+            ELSE starsCount
+            END desc"""
+    )
+    fun getRepositories(criteria: String): DataSource.Factory<Int, DBRepository>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg repositories: DBRepository)
@@ -50,5 +58,6 @@ interface GithubRepositoriesDao {
 
     @Query("DELETE FROM owners")
     fun deleteOwners()
+
 
 }

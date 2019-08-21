@@ -2,8 +2,12 @@ package com.valeserber.githubchallenge.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.paging.PagedList
 import com.valeserber.githubchallenge.domain.GithubSearchResult
+import com.valeserber.githubchallenge.domain.NetworkStatus
+import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.repository.GithubSearchRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,19 +24,17 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
         get() = _navigateToRepositoryDetail
 
 
+    private val queryLiveData = MutableLiveData<String>()
+    private val searchResult: LiveData<GithubSearchResult> = Transformations.map(queryLiveData) {
+        githubSearchRepository.search(query = it, criteria = "stars", scope = viewModelScope)
+    }
+
+    val repositories: LiveData<PagedList<Repository>> = Transformations.switchMap(searchResult) { it.repositories }
+    //val networkStatus: LiveData<NetworkStatus> = repoResult.value?.networkStatus
+
+
     init {
-        //TODO fix
-
-
-        viewModelScope.launch {
-            var githubSearchResult = GithubSearchResult()
-
-            githubSearchResult = githubSearchRepository.refreshSearch()
-
-            //TODO Fragment has to observe githubSearchResult.networkStatus and gihubSearchResult.repositoriesList
-            
-        }
-
+        queryLiveData.postValue("android")
 
     }
 
@@ -44,7 +46,6 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
         _navigateToRepositoryDetail.value = null
     }
 
-    val repositories = githubSearchRepository.repositoriesList
 }
 
 
