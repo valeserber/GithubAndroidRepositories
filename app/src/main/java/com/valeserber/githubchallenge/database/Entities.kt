@@ -41,3 +41,6 @@ fun DBRepository.asDomainModel(): Repository {
     return Repository(id, name, description, url, starsCount, forksCount, watchersCount, language, Owner(ownerId))
 }
 
+fun DBOwner.asDomainModel(): Owner {
+    return Owner(id, name, avatarUrl)
+}

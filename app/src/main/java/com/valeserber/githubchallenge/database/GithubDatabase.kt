@@ -1,6 +1,7 @@
 package com.valeserber.githubchallenge.database
 
 import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.paging.DataSource
 import androidx.room.*
 
@@ -48,7 +49,7 @@ interface GithubRepositoriesDao {
     fun insertAll(vararg repositories: DBRepository)
 
     @Query("SELECT * FROM owners WHERE id=:id")
-    fun getUserById(id: Long): DBOwner
+    fun getUserById(id: Long): LiveData<DBOwner>
 
     @Query("SELECT * FROM owners")
     fun getOwners(): List<DBOwner>
@@ -58,6 +59,9 @@ interface GithubRepositoriesDao {
 
     @Query("DELETE FROM owners")
     fun deleteOwners()
+
+    @Query("SELECT * FROM repositories WHERE id=:id")
+    fun getRepositoryById(id: Long): LiveData<DBRepository?>
 
 
 }

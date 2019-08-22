@@ -16,7 +16,7 @@
 
         <TextView
                 android:id="@+id/detail_name_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginStart="@dimen/small_margin"
@@ -27,12 +27,13 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/big_text"
                 android:textStyle="bold"
+                android:text="@{viewModel.repository.name}"
                 tools:text="Repository name"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_url_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginStart="@dimen/small_margin"
@@ -44,11 +45,12 @@
                 android:textStyle="italic"
                 android:textSize="@dimen/small_text"
                 tools:text="Url text"
+                android:text="@{viewModel.repository.url}"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_description_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/small_margin"
@@ -59,6 +61,7 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/medium_text"
                 tools:text="Repository description"
+                android:text="@{viewModel.repository.description}"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
@@ -84,6 +87,7 @@
                 app:layout_constraintStart_toEndOf="@+id/detail_star_description"
                 android:textSize="@dimen/medium_text"
                 tools:text="23456"
+                app:convertLongToString="@{viewModel.repository.starsCount}"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
@@ -109,6 +113,7 @@
                 app:layout_constraintStart_toEndOf="@+id/detail_fork_description"
                 android:textSize="@dimen/medium_text"
                 tools:text="78901"
+                app:convertLongToString="@{viewModel.repository.forksCount}"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
@@ -136,11 +141,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="@dimen/medium_text"
                 tools:text="78901"
+                app:convertLongToString="@{viewModel.repository.watchersCount}"
                 android:fontFamily="@font/roboto"/>
 
         <TextView
                 android:id="@+id/detail_owner_text"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginEnd="@dimen/small_margin"

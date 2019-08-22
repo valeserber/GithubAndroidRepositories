@@ -33,6 +33,9 @@ class GithubDetailFragment : Fragment() {
             ViewModelProviders.of(this, Injection.provideGithubDetailViewModelFactory(repoId, this.requireContext()))
                 .get(GithubDetailViewModel::class.java)
 
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = this
+
 
         return binding.root
     }
