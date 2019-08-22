@@ -52,6 +52,8 @@ class GithubSearchBoundaryCallback(
             try {
                 _networkStatus.postValue(NetworkStatus.LOADING)
 
+                Log.i("GithubSearchRepos", """retrieving page number $lastRequestedPage""")
+
                 //TODO change stars to criteria
                 val searchResponse = apiService
                     .searchRepositoriesAsync(query, "stars", "desc", lastRequestedPage, NETWORK_PAGE_SIZE)
