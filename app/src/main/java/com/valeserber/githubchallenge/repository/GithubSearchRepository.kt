@@ -19,6 +19,7 @@ class GithubSearchRepository(
     private val apiService: GithubApiService
 ) {
 
+    var criteria : String = "stars"
 
     suspend fun getOwnerById(id: Long): DBOwner {
         return withContext(Dispatchers.IO) {
@@ -36,24 +37,29 @@ class GithubSearchRepository(
     suspend fun deleteOwners() {
         withContext(Dispatchers.IO) {
             database.githubRepositoriesDao.deleteOwners()
+            getDataSourceFactory().create().invalidate()
         }
     }
 
-    fun search(query: String, criteria: String, scope: CoroutineScope): GithubSearchResult {
+    private fun getDataSourceFactory(): DataSource.Factory<Int, Repository> {
 
-        val dataSourceFactory = database.githubRepositoriesDao.getRepositories(criteria)
+        val factory = database.githubRepositoriesDao.getRepositories(criteria)
+        return factory.map {
+            it.asDomainModel()
+        }
+    }
+
+    fun search(query: String, scope: CoroutineScope): GithubSearchResult {
 
         val boundaryCallback = GithubSearchBoundaryCallback(query, database, apiService, scope)
 
-        val modelDataSource: DataSource.Factory<Int, Repository> = dataSourceFactory.map {
-            it.asDomainModel()
-        }
+        val dataSourceFactory = getDataSourceFactory()
 
-        val data = LivePagedListBuilder(modelDataSource, DATABASE_PAGE_SIZE)
+        val data = LivePagedListBuilder(dataSourceFactory, DATABASE_PAGE_SIZE)
             .setBoundaryCallback(boundaryCallback)
             .build()
 
-        Log.i("GithubSearchRepos", "in repository " + boundaryCallback.networkStatus.value.toString())
+        Log.i("GithubSearchRepos", "in search repository " + boundaryCallback.networkStatus.value.toString())
         return GithubSearchResult(boundaryCallback.networkStatus, data)
     }
 

@@ -74,5 +74,7 @@ class GithubSearchFragment : Fragment() {
                 }
             }
         })
+
     }
+
 }
