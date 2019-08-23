@@ -65,12 +65,28 @@
                 android:fontFamily="@font/roboto"/>
 
         <TextView
+                android:id="@+id/detail_language_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:layout_constraintTop_toBottomOf="@+id/detail_description_text"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                android:textSize="@dimen/medium_text"
+                tools:text="Language description"
+                android:text="@{viewModel.repository.language}"
+                android:fontFamily="@font/roboto"/>
+
+        <TextView
                 android:id="@+id/detail_star_description"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
                 android:layout_marginTop="@dimen/medium_margin"
-                app:layout_constraintTop_toBottomOf="@+id/detail_description_text"
+                app:layout_constraintTop_toBottomOf="@+id/detail_language_text"
                 app:layout_constraintStart_toStartOf="parent"
                 android:textSize="@dimen/medium_text"
                 android:text="@string/star_count"
@@ -156,7 +172,8 @@
                 app:layout_constraintBottom_toBottomOf="@+id/detail_owner_image"
                 app:layout_constraintHorizontal_bias="0.0"
                 android:textSize="@dimen/medium_text"
-                android:text="@string/owner_name"
+                app:ownerName="@{viewModel.owner}"
+                tools:text="@string/owner_name"
                 android:fontFamily="@font/roboto"/>
 
         <ImageView
@@ -168,6 +185,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/detail_star_description"
                 android:contentDescription="@string/owner_image"
+                app:loadImage="@{viewModel.owner}"
                 tools:srcCompat="@tools:sample/avatars"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>

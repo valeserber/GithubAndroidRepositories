@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.valeserber.githubchallenge.R
 import com.valeserber.githubchallenge.databinding.FragmentGithubDetailBinding
@@ -35,6 +36,12 @@ class GithubDetailFragment : Fragment() {
 
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.repository.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                viewModel.initializeOwner(it.owner.id)
+            }
+        })
 
 
         return binding.root

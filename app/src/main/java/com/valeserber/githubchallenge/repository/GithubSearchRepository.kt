@@ -56,13 +56,6 @@ class GithubSearchRepository(
         }
     }
 
-    suspend fun getOwners(): List<DBOwner> {
-        return withContext(Dispatchers.IO) {
-            return@withContext database.githubRepositoriesDao.getOwners()
-        }
-    }
-
-
     suspend fun deleteOwners() {
         withContext(Dispatchers.IO) {
             database.githubRepositoriesDao.deleteOwners()
