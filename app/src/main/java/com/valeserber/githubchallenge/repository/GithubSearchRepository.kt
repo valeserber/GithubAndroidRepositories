@@ -1,17 +1,19 @@
 package com.valeserber.githubchallenge.repository
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
 import androidx.paging.DataSource
 import androidx.paging.LivePagedListBuilder
 import com.valeserber.githubchallenge.database.DBOwner
+import com.valeserber.githubchallenge.database.DBRepository
 import com.valeserber.githubchallenge.database.GithubDatabase
 import com.valeserber.githubchallenge.database.asDomainModel
 import com.valeserber.githubchallenge.domain.GithubSearchResult
+import com.valeserber.githubchallenge.domain.Owner
 import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.network.GithubApiService
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.*
 
 
 class GithubSearchRepository(
@@ -19,20 +21,40 @@ class GithubSearchRepository(
     private val apiService: GithubApiService
 ) {
 
-    var criteria : String = "stars"
+    var criteria: String = "stars"
 
-    suspend fun getOwnerById(id: Long): DBOwner {
+    private suspend fun getOwnerById(id: Long): LiveData<DBOwner> {
         return withContext(Dispatchers.IO) {
             return@withContext database.githubRepositoriesDao.getUserById(id)
         }
     }
 
-    suspend fun getOwners(): List<DBOwner> {
+    private suspend fun getRepositoryById(id: Long): LiveData<DBRepository?> {
         return withContext(Dispatchers.IO) {
-            return@withContext database.githubRepositoriesDao.getOwners()
+            return@withContext database.githubRepositoriesDao.getRepositoryById(id)
         }
     }
 
+    suspend fun getRepositoryByIdAsync(id: Long, scope: CoroutineScope): Deferred<LiveData<Repository?>> {
+        return scope.async {
+            val liveDataRepo = getRepositoryById(id)
+            val repo = Transformations.map(liveDataRepo) {
+                return@map it?.asDomainModel()
+            }
+            repo
+
+        }
+    }
+
+    suspend fun getOwnerByIdAsync(id: Long, scope: CoroutineScope): Deferred<LiveData<Owner?>> {
+        return scope.async {
+            val liveDataOwner = getOwnerById(id)
+            val owner = Transformations.map(liveDataOwner) {
+                return@map it?.asDomainModel()
+            }
+            owner
+        }
+    }
 
     suspend fun deleteOwners() {
         withContext(Dispatchers.IO) {

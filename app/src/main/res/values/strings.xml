@@ -4,5 +4,7 @@
     <string name="fork_count">Forks</string>
     <string name="watchers_count">Watchers</string>
     <string name="owner_image">Owner avatar</string>
+    <string name="owner_name_with_param">Owner: %s</string>
     <string name="owner_name">Owner</string>
+    <string name="empty_string"> </string>
 </resources>
