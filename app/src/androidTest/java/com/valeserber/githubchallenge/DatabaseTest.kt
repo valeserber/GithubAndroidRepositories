@@ -21,7 +21,9 @@ import java.io.IOException
 open class GithubRepositoriesDaoTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule() //async executor
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    //swaps the background executor used by the Architecture Components with a
+    //different one which executes each task synchronously.
 
     private lateinit var repositoriesDao: GithubRepositoriesDao
     private lateinit var db: GithubDatabase

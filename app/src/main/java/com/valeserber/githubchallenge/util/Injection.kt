@@ -18,8 +18,11 @@ object Injection {
         return GithubSearchRepository(provideDatabase(context), GithubNetwork.retrofitService)
     }
 
-    fun provideGithubSearchViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return GithubSearchViewModelFactory(provideGithubSearchRepository(context))
+    fun provideGithubSearchViewModelFactory(
+        connectivityLiveData: ConnectivityLiveData,
+        context: Context
+    ): ViewModelProvider.Factory {
+        return GithubSearchViewModelFactory(connectivityLiveData, provideGithubSearchRepository(context))
     }
 
     fun provideGithubDetailViewModelFactory(repositoryId: Long, context: Context): ViewModelProvider.Factory {

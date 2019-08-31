@@ -5,7 +5,7 @@ import com.valeserber.githubchallenge.database.DBOwner
 import com.valeserber.githubchallenge.database.DBRepository
 import com.valeserber.githubchallenge.domain.Owner
 
-//DAOs (Data transfer objects) are responsible for parsing responses from the server and formatting objects
+//DTOs (Data transfer objects) are responsible for parsing responses from the server and formatting objects
 //to send to the server
 
 data class NetworkSearchResponse(

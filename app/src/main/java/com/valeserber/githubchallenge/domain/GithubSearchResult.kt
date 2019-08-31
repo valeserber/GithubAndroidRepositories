@@ -9,5 +9,3 @@ data class GithubSearchResult(
     var repositories: LiveData<PagedList<Repository>>? = null
 
 )
-
-enum class NetworkStatus { LOADING, DONE, ERROR }
