@@ -1,6 +1,5 @@
 package com.valeserber.githubchallenge.viewmodels
 
-import android.app.Application
 import androidx.lifecycle.*
 import androidx.paging.PagedList
 import com.valeserber.githubchallenge.domain.ErrorType
@@ -15,8 +14,8 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 
-class GithubSearchViewModel(application: Application, githubSearchRepository: GithubSearchRepository) :
-    AndroidViewModel(application) {
+class GithubSearchViewModel(connectivityLiveData: ConnectivityLiveData, githubSearchRepository: GithubSearchRepository) :
+    ViewModel() {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -43,7 +42,7 @@ class GithubSearchViewModel(application: Application, githubSearchRepository: Gi
 
     val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
 
-    val connectivity = ConnectivityLiveData(this.getApplication<Application>())
+    val connectivity = connectivityLiveData
 
     init {
         repository.criteria = "stars"

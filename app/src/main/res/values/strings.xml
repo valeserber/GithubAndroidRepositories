@@ -7,4 +7,6 @@
     <string name="owner_name_with_param">Owner: %s</string>
     <string name="owner_name">Owner</string>
     <string name="empty_string"> </string>
+    <string name="no_internet_error">Check your internet connection</string>
+    <string name="generic_error">Sorry, something went wrong</string>
 </resources>

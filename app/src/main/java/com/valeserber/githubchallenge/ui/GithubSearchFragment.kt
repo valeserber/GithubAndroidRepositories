@@ -14,6 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.valeserber.githubchallenge.R
 import com.valeserber.githubchallenge.databinding.FragmentGithubSearchBinding
 import com.valeserber.githubchallenge.domain.ErrorType
+import com.valeserber.githubchallenge.util.ConnectivityLiveData
 import com.valeserber.githubchallenge.util.Injection
 import com.valeserber.githubchallenge.viewmodels.GithubSearchViewModel
 
@@ -31,10 +32,13 @@ class GithubSearchFragment : Fragment() {
             false
         )
 
+        //TODO check requireActivity
+        val connectivity = ConnectivityLiveData(this.requireActivity().application)
+
         //TODO check requireContext
         viewModel = ViewModelProviders.of(
             this,
-            Injection.provideGithubSearchViewModelFactory(this.requireActivity().application, this.requireContext())
+            Injection.provideGithubSearchViewModelFactory(connectivity, this.requireContext())
         )
             .get(GithubSearchViewModel::class.java)
 
@@ -84,8 +88,8 @@ class GithubSearchFragment : Fragment() {
         viewModel.errorType.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when (it) {
-                    ErrorType.CONNECTIVITY -> Toast.makeText(context, "Check your internet connection", Toast.LENGTH_LONG).show()
-                    ErrorType.NETWORK -> Toast.makeText(context, "Sorry, something went wrong", Toast.LENGTH_LONG).show()
+                    ErrorType.CONNECTIVITY -> Toast.makeText(context, getString(R.string.no_internet_error), Toast.LENGTH_LONG).show()
+                    ErrorType.NETWORK -> Toast.makeText(context, getString(R.string.generic_error), Toast.LENGTH_LONG).show()
                 }
             }
         })
