@@ -30,7 +30,10 @@ abstract class GithubDatabase : RoomDatabase() {
     }
 }
 
-
+//Data Access Objects are the main classes where you define your database interactions. They can
+//include a variety of query methods.
+//@Dao should either be an interface or an abstract class
+//At compile time, Room will generate an implementation of this class when it is referenced by a database
 @Dao
 interface GithubRepositoriesDao {
 

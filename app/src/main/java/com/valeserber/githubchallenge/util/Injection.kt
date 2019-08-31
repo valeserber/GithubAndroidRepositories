@@ -1,5 +1,6 @@
 package com.valeserber.githubchallenge.util
 
+import android.app.Application
 import android.content.Context
 import androidx.lifecycle.ViewModelProvider
 import com.valeserber.githubchallenge.database.GithubDatabase
@@ -18,8 +19,8 @@ object Injection {
         return GithubSearchRepository(provideDatabase(context), GithubNetwork.retrofitService)
     }
 
-    fun provideGithubSearchViewModelFactory(context: Context): ViewModelProvider.Factory {
-        return GithubSearchViewModelFactory(provideGithubSearchRepository(context))
+    fun provideGithubSearchViewModelFactory(application: Application, context: Context): ViewModelProvider.Factory {
+        return GithubSearchViewModelFactory(application, provideGithubSearchRepository(context))
     }
 
     fun provideGithubDetailViewModelFactory(repositoryId: Long, context: Context): ViewModelProvider.Factory {

@@ -1,22 +1,22 @@
 package com.valeserber.githubchallenge.viewmodels
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
+import android.app.Application
+import androidx.lifecycle.*
 import androidx.paging.PagedList
+import com.valeserber.githubchallenge.domain.ErrorType
 import com.valeserber.githubchallenge.domain.GithubSearchResult
 import com.valeserber.githubchallenge.domain.NetworkStatus
 import com.valeserber.githubchallenge.domain.Repository
 import com.valeserber.githubchallenge.repository.GithubSearchRepository
+import com.valeserber.githubchallenge.util.ConnectivityLiveData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
 
-class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : ViewModel() {
+class GithubSearchViewModel(application: Application, githubSearchRepository: GithubSearchRepository) :
+    AndroidViewModel(application) {
 
     private val viewModelJob = SupervisorJob()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -30,7 +30,6 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
 
     private val queryLiveData = MutableLiveData<String>()
     private val searchResult: LiveData<GithubSearchResult> = Transformations.map(queryLiveData) {
-        Log.i("GithubSearchRepos", "calling search")
         repository.search(it, viewModelScope)
     }
 
@@ -38,10 +37,13 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
 
     val networkStatus: LiveData<NetworkStatus> = Transformations.switchMap(searchResult) { it.networkStatus }
 
-    private var _isRefreshing = MutableLiveData<Boolean>()
-    val isLoading : LiveData<Boolean> = Transformations.switchMap(networkStatus) {
-        isRefreshingNetworkRequestLoading(networkStatus)
-    }
+    private val _errorType: MutableLiveData<ErrorType> = MutableLiveData()
+    val errorType: LiveData<ErrorType>
+        get() = _errorType
+
+    val isRefreshing: MutableLiveData<Boolean> = MutableLiveData()
+
+    val connectivity = ConnectivityLiveData(this.getApplication<Application>())
 
     init {
         repository.criteria = "stars"
@@ -56,33 +58,54 @@ class GithubSearchViewModel(githubSearchRepository: GithubSearchRepository) : Vi
         _navigateToRepositoryDetail.value = null
     }
 
-    private fun isRefreshingNetworkRequestLoading(networkStatus: LiveData<NetworkStatus>) : LiveData<Boolean> {
-        return Transformations.map(networkStatus) {
-
-            val refreshing = _isRefreshing.value ?: false
-            val loadingNetwork = networkStatus.value?.equals(NetworkStatus.LOADING) ?: true
-
-            if (!loadingNetwork) {
-                _isRefreshing.postValue(false)
-            }
-
-            refreshing && loadingNetwork
-        }
-    }
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
     fun onRefresh() {
-        Log.i("GithubSearchRepos", "on refresh")
-        _isRefreshing.postValue(true)
-        viewModelScope.launch {
-            repository.deleteOwners()
-            queryLiveData.postValue("android")
-        }
+        isRefreshing.postValue(true)
 
+        if (canRefresh()) {
+            viewModelScope.launch {
+                repository.deleteOwners()
+                queryLiveData.postValue("android")
+            }
+        } else {
+            isRefreshing.postValue(false)
+            _errorType.postValue(ErrorType.CONNECTIVITY)
+        }
+    }
+
+    fun analyzeNetworkStatus() {
+        when (networkStatus.value) {
+            NetworkStatus.ERROR -> handleNetworkStatusError()
+            NetworkStatus.DONE -> handleNetworkStatusDone()
+            NetworkStatus.LOADING -> handleNetworkStatusLoading()
+        }
+    }
+
+    private fun handleNetworkStatusLoading() {
+        //do nothing
+    }
+
+
+    private fun handleNetworkStatusDone() {
+        isRefreshing.postValue(false)
+    }
+
+    private fun handleNetworkStatusError() {
+        val hasConnection = connectivity.value ?: false
+        if (hasConnection) {
+            _errorType.postValue(ErrorType.NETWORK)
+        } else {
+            _errorType.postValue(ErrorType.CONNECTIVITY)
+        }
+        isRefreshing.postValue(false)
+    }
+
+    private fun canRefresh(): Boolean {
+        return connectivity.value ?: false
     }
 
 }
