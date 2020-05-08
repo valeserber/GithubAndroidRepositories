@@ -59,5 +59,6 @@ dependencies {
     androidTestImplementation "androidx.test:rules:$rules_version"
     androidTestImplementation "androidx.room:room-testing:$room_version"
     androidTestImplementation "androidx.arch.core:core-testing:$arch_core_testing"
-
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.1.0'
 }
